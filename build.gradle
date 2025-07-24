@@ -1,27 +1,30 @@
 plugins {
     id 'java'
     id 'application'
-    id 'org.openjfx.javafxplugin' version '0.0.10'
-    id 'org.beryx.jlink' version '2.24.1'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
 }
 
 group = 'org.example'
 version = '1.0-SNAPSHOT'
 
+application {
+    mainClass = 'org.example.Main'
+}
+
 repositories {
     mavenCentral()
 }
 
-application {
-    mainModule = 'src.main.java'
-    mainClass = 'src.main.java.org.example.Main'
-}
-
 javafx {
-    version = '16'
-    modules = ['javafx.controls', 'javafx.graphics']
+    version = "22.0.1"
+    modules = ['javafx.controls', 'javafx.fxml']
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
 
 dependencies {
     testImplementation platform('org.junit:junit-bom:5.10.0')
