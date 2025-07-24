@@ -1,0 +1,14 @@
+.my-button {
+  -fx-border-color: #171616;
+  -fx-border-width: 2px;
+  -fx-background-color: #171616;
+  -fx-cursor: hand;
+  -fx-padding: 0.8em 1.2em 0.8em 1em;
+  -fx-font-size: 20px;
+  -fx-text-fill: white;
+  -fx-font-weight: bold;
+}
+
+.my-button:hover {
+  -fx-background-color: #707070;
+}
