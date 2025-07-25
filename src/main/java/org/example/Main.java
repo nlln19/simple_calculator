@@ -3,11 +3,14 @@ package org.example;
 import java.util.Objects;
 import javafx.application.Application;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.control.Button;
 import net.objecthunter.exp4j.Expression;
@@ -18,7 +21,7 @@ public class Main extends Application {
 	/* Scaling */
 	private final double WIDTH = 500;
 	private final double HEIGHT = 600;
-	private final double BUTTON_HEIGHT = HEIGHT / 5;
+	private final double BUTTON_HEIGHT = HEIGHT / 6;
 	private final double BUTTON_WIDTH = WIDTH / 5;
 
 	/* Icon from: https://www.flaticon.com/free-icon/calculator_1011863 */
@@ -126,6 +129,7 @@ public class Main extends Application {
 	/* Init TextField */
 	private void init_display() {
 		this.display.setAlignment(Pos.CENTER);
+		this.display.setFont(Font.font(40));
 		this.display.setPromptText("0");
 		this.display.setEditable(false);
 		this.display.setFocusTraversable(false);
@@ -308,6 +312,8 @@ public class Main extends Application {
 	/* Function to handle all button events */
 	private void button_pressed_action_for_operations_and_numbers(Button b, String action) {
 		b.setOnAction((event) -> {
+			adapt_fontsize_to_fit();
+
 			/* User pressed equals button */
 			if(b.equals(this.b_enter))
 				handle_enter_action();
@@ -355,8 +361,37 @@ public class Main extends Application {
 
 			this.display.clear();
 			this.display.setText(String.valueOf(exp.evaluate()));
+			adapt_fontsize_to_fit();
 		} catch (Exception e) {
 			this.display.setText("Syntax Error");
 		}
 	}
+
+	/* Resizes the display text */
+	private void adapt_fontsize_to_fit() {
+		String text = this.display.getText();
+		if (text.isEmpty()) return;
+
+		double fontSize = this.display.getFont().getSize();
+		Text textNode = new Text(text);
+		textNode.setFont(Font.font(fontSize));
+
+		new Scene(new Group(textNode));
+
+		if(fontSize < 40){
+			while(textNode.getLayoutBounds().getWidth() < (WIDTH - 100)) {
+				fontSize += 1;
+				textNode.setFont(Font.font(fontSize));
+
+				if(fontSize >= 40) break;
+			}
+		}
+
+		while (textNode.getLayoutBounds().getWidth() > (WIDTH - 120) && fontSize > 6) {
+			fontSize -= 1;
+			textNode.setFont(Font.font(fontSize));
+		}
+		this.display.setFont(Font.font(fontSize));
+	}
+
 }
