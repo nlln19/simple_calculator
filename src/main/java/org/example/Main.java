@@ -14,10 +14,10 @@ import net.objecthunter.exp4j.ExpressionBuilder;
 
 public class Main extends Application {
 
-	/* globally available */
+	/* Globally available */
 	private Stage stage;
 	private Scene curr_Scene;
-	private boolean check_if_clear_needed = false;
+	private boolean check_if_clear_needed = true;
 
 	/* Scaling */
 	private final double WIDTH = 500;
@@ -28,7 +28,7 @@ public class Main extends Application {
 	/* Icon from: https://www.flaticon.com/free-icon/calculator_1011863 */
 	private final Image logo = new Image("https://shorturl.at/uParh");
 
-	/* contains all number and operation rows */
+	/* Contains all number and operation rows */
 	private final VBox calculator = new VBox();
 
 	/* TextArea functions as a display for input/output */
@@ -57,21 +57,23 @@ public class Main extends Application {
 	/* Buttons for operations */
 	private final Button b_plus  = new Button("+");
 	private final Button b_minus  = new Button("-");
-	private final Button b_division  = new Button("/");
-	private final Button b_multiplication  = new Button("*");
-	private final Button b_comma  = new Button(",");
-	private final Button b_root  = new Button("root"); // TODO: root sign
-	private final Button b_pow  = new Button("pow"); // TODO: pow sign
+	private final Button b_division  = new Button("÷");
+	private final Button b_multiplication  = new Button("×");
+	private final Button b_comma  = new Button(".");
+	private final Button b_root  = new Button("√");
+	private final Button b_pow  = new Button("x²");
 	private final Button b_enter = new Button("=");
-	private final Button b_delete = new Button("del"); // TODO: delete sign
+	private final Button b_delete = new Button("⌫"); // TODO: delete sign
 	private final Button b_left_bracket = new Button("("); // TODO: Add this button
 	private final Button b_right_bracket = new Button(")");
 	private final Button b_clear = new Button("C"); // TODO: Add this button
 
+	/* Main method to start the Application */
 	public static void main(String[] args) {
 		launch(args);
 	}
 
+	/* Starts the Application */
 	@Override
 	public void start(Stage primaryStage) {
 		init_calculator_ui();
@@ -94,12 +96,12 @@ public class Main extends Application {
 		this.stage.show();
 	}
 
-	/* returns the calculator */
+	/* Returns the calculator */
 	private VBox displayCalculator() {
 		return this.calculator;
 	}
 
-	/* initializes the calculator */
+	/* Initializes the calculator */
 	private void init_calculator_ui(){
 		init_first_number_row();
 		init_second_number_row();
@@ -113,7 +115,7 @@ public class Main extends Application {
 		init_calculator();
 	}
 
-	/* init calculator */
+	/* Init calculator (VBox) */
 	private void init_calculator() {
 		this.calculator.setPrefWidth(WIDTH);
 		this.calculator.setPrefHeight(HEIGHT);
@@ -123,10 +125,10 @@ public class Main extends Application {
 		);
 	}
 
-	/* init TextArea field */
+	/* Init TextArea field */
 	private void init_textarea() {
+		this.display_input_and_solution.setText("0");
 		this.display_input_and_solution.setEditable(false);
-		this.display_input_and_solution.setWrapText(true);
 		this.display_input_and_solution.setFocusTraversable(false);
 		this.display_input_and_solution.setPrefWidth(WIDTH);
 		this.display_input_and_solution.setPrefHeight(NUMBER_ROW_HEIGHT);
@@ -137,7 +139,7 @@ public class Main extends Application {
 		this.input_and_solution.setPrefHeight(NUMBER_ROW_HEIGHT);
 	}
 
-	/* init operations row */
+	/* Init operations row */
 	private void init_operations_row() {
 		this.b_plus.setPrefHeight(NUMBER_ROW_HEIGHT);
 		this.b_plus.setPrefWidth(NUMBER_ROW_WIDTH);
@@ -166,7 +168,7 @@ public class Main extends Application {
 		this.operations_row.setPrefHeight(NUMBER_ROW_HEIGHT);
 	}
 
-	/* init first number row */
+	/* Init first number row */
 	private void init_first_number_row() {
 		this.b1.setPrefHeight(NUMBER_ROW_HEIGHT);
 		this.b1.setPrefWidth(NUMBER_ROW_WIDTH);
@@ -193,7 +195,7 @@ public class Main extends Application {
 		this.first_number_row.setPrefHeight(NUMBER_ROW_HEIGHT);
 	}
 
-	/* init second number row */
+	/* Init second number row */
 	private void init_second_number_row() {
 		this.b4.setPrefHeight(NUMBER_ROW_HEIGHT);
 		this.b4.setPrefWidth(NUMBER_ROW_WIDTH);
@@ -220,7 +222,7 @@ public class Main extends Application {
 		this.second_number_row.setPrefHeight(NUMBER_ROW_HEIGHT);
 	}
 
-	/* init third number row */
+	/* Init third number row */
 	private void init_third_number_row() {
 		this.b7.setPrefHeight(NUMBER_ROW_HEIGHT);
 		this.b7.setPrefWidth(NUMBER_ROW_WIDTH);
@@ -247,7 +249,7 @@ public class Main extends Application {
 		this.third_number_row.setPrefHeight(NUMBER_ROW_HEIGHT);
 	}
 
-	/* init fourth number row */
+	/* Init fourth number row */
 	private void init_fourth_number_row() {
 		this.b0.setPrefHeight(NUMBER_ROW_HEIGHT);
 		this.b0.setPrefWidth(NUMBER_ROW_WIDTH);
@@ -274,12 +276,12 @@ public class Main extends Application {
 		this.fourth_number_row.setPrefHeight(NUMBER_ROW_HEIGHT);
 	}
 
-	/* styling for buttons using css (resources/style.css) */
+	/* Styling for buttons using css (resources/style.css) */
 	private void style_button(Button b) {
 		b.getStyleClass().add("my-button");
 	}
 
-	/* function to handle all button events */
+	/* Function to handle all button events */
 	private void button_pressed_action_for_operations_and_numbers(Button b, String action) {
 		b.setOnAction((event) -> {
 			/* User pressed equals button */
@@ -296,7 +298,7 @@ public class Main extends Application {
 		});
 	}
 
-	/* help functions for button events */
+	/* Helper functions for button events */
 	private void handle_button(String action) {
 		if(this.check_if_clear_needed)
 			this.display_input_and_solution.clear();
