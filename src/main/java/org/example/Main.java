@@ -4,8 +4,6 @@ import java.util.Objects;
 import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -32,7 +30,10 @@ public class Main extends Application {
 	private final double BUTTON_HEIGHT = HEIGHT / 6;
 	private final double BUTTON_WIDTH = WIDTH / 5;
 
-	/* Icon from: https://www.flaticon.com/free-icon/calculator_1011863 */
+	/*
+	* Icon from: https://www.flaticon.com/free-icon/calculator_1011863
+	* URL shortened with: https://www.shorturl.at/
+	*/
 	private final Image logo = new Image("https://shorturl.at/uParh");
 
 	/* Contains the display and number/operation buttons */
