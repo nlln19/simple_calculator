@@ -1,12 +1,20 @@
 package org.example;
 
 import java.util.Objects;
+import java.util.function.UnaryOperator;
+import java.util.regex.Pattern;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
+import javafx.scene.control.TextFormatter.Change;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -91,10 +99,26 @@ public class Main extends Application {
 		Scene calculatorScene = new Scene(displayCalculator());
 		calculatorScene.getStylesheets().add(Objects.requireNonNull(
 			getClass().getResource("/style.css")).toExternalForm());
-
-
 		calculatorStage.setScene(calculatorScene);
 		calculatorStage.show();
+	}
+
+	/* Handles Keys for display */
+	private void handle_key_pressed(KeyEvent key) {
+			KeyCode code = key.getCode();
+			switch (code) {
+				case TAB:
+					this.display.isFocused();
+				case ENTER:
+					handle_enter_action();
+					break;
+				case DELETE:
+					clear_display();
+					break;
+				case BACK_SPACE:
+					handle_delete_action();
+					break;
+			}
 	}
 
 	/* Returns the calculator */
@@ -131,11 +155,13 @@ public class Main extends Application {
 		this.display.setAlignment(Pos.CENTER);
 		this.display.setFont(Font.font(40));
 		this.display.setPromptText("0");
-		this.display.setEditable(false);
+		this.display.setEditable(true);
 		this.display.setFocusTraversable(false);
 		this.display.setPrefWidth(WIDTH);
 		this.display.setPrefHeight(BUTTON_HEIGHT);
 		this.display.getStyleClass().add("my-display");
+		this.display.setOnKeyPressed(this::handle_key_pressed);
+		ignore_letters();
 
 		this.input_and_solution = new HBox(this.display);
 		this.input_and_solution.setPrefWidth(WIDTH);
@@ -304,15 +330,10 @@ public class Main extends Application {
 		this.fourth_number_row.setPrefHeight(BUTTON_HEIGHT);
 	}
 
-	/* Styling for buttons using css (resources/style.css) */
-	private void style_button(Button b) {
-		b.getStyleClass().add("my-button");
-	}
-
 	/* Function to handle all button events */
 	private void button_pressed_action_for_operations_and_numbers(Button b, String action) {
 		b.setOnAction((event) -> {
-			adapt_fontsize_to_fit();
+			resize_display();
 
 			/* User pressed equals button */
 			if(b.equals(this.b_enter))
@@ -324,7 +345,7 @@ public class Main extends Application {
 
 			/* User pressed clear button */
 			else if(b.equals(this.b_clear))
-				this.display.clear();
+				clear_display();
 
 			/* User pressed other button */
 			else
@@ -361,14 +382,14 @@ public class Main extends Application {
 
 			this.display.clear();
 			this.display.setText(String.valueOf(exp.evaluate()));
-			adapt_fontsize_to_fit();
+			resize_display();
 		} catch (Exception e) {
 			this.display.setText("Syntax Error");
 		}
 	}
 
 	/* Resizes the display text */
-	private void adapt_fontsize_to_fit() {
+	private void resize_display() {
 		String text = this.display.getText();
 		if (text.isEmpty()) return;
 
@@ -394,4 +415,30 @@ public class Main extends Application {
 		this.display.setFont(Font.font(fontSize));
 	}
 
+	/* The display ignores letters from keyboard inputs */
+	private void ignore_letters() {
+		Pattern validPattern = Pattern.compile("[0-9+\\-*/().^]*"); /* Only numbers and operations are allowed*/
+
+		UnaryOperator<Change> filter = change -> {
+			String newText = change.getControlNewText();
+			if (validPattern.matcher(newText).matches()) {
+				return change;
+			} else {
+				return null;
+			}
+		};
+
+		TextFormatter<String> formatter = new TextFormatter<>(filter);
+		this.display.setTextFormatter(formatter);
+	}
+
+	/* Clears the display */
+	private void clear_display() {
+		this.display.clear();
+	}
+
+	/* Styling for buttons using css (resources/style.css) */
+	private void style_button(Button b) {
+		b.getStyleClass().add("my-button");
+	}
 }
