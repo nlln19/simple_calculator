@@ -416,7 +416,10 @@ public class Main extends Application {
 		this.display.setFont(Font.font(fontSize));
 	}
 
-	/* The display ignores letters from keyboard inputs */
+	/*
+	* The display ignores letters from keyboard inputs
+	* inspired from: https://stackoverflow.com/questions/34407694/javafx-textfield-allow-only-one-letter-to-be-typed
+	* */
 	private void ignore_letters() {
 		Pattern validPattern = Pattern.compile("[0-9+\\-*/().^]*"); /* Only numbers and operations are allowed*/
 
